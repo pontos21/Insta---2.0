@@ -34,7 +34,6 @@ function Post({ id, username, userImg, img, caption }) {
         </form>
 
 
-
     </div>
   )
 }
