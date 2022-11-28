@@ -1,36 +1,38 @@
-import React from 'react'
-import Post from './Post'
-
-const posts = [
-    {
-        id: '123',
-        username: 'pontos',
-        userImg: 'https://i.ibb.co/kKBBCMf/twitter-dp.jpg',
-        img: 'https://i.ibb.co/kKBBCMf/twitter-dp.jpg',
-        caption: 'this lit '
-    },
-    {
-        id: '123',
-        username: 'pontos',
-        userImg: 'https://i.ibb.co/kKBBCMf/twitter-dp.jpg',
-        img: 'https://i.ibb.co/kKBBCMf/twitter-dp.jpg',
-        caption: 'this lit '
-    },
-]
+import Post from "./Post";
+import { collection, onSnapshot, orderBy, query } from "firebase/firestore";
+import { db } from "../firebase";
+import { useEffect, useState } from "react";
 
 function Posts() {
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const unsubcribe = onSnapshot(
+      query(collection(db, "posts"), orderBy("timestamp", "desc")),
+      (snapshot) => {
+        setPosts(snapshot.docs);
+      }
+    );
+
+    return () => {
+      unsubcribe();
+    };
+  }, [db]);
+
   return (
     <div>
-        {posts.map(post => (
-            <Post key={post.id} 
-            id={post.id} 
-            username={post.username}
-            userImg={post.userImg}
-            img={post.img}
-            caption={post.caption} />
-        ))}
+      {posts.map((post) => (
+        <Post
+          key={post.id}
+          id={post.id}
+          username={post.data().username}
+          userImg={post.data().profileImg}
+          img={post.data().image}
+          caption={post.data().caption}
+        />
+      ))}
     </div>
-  )
+  );
 }
 
-export default Posts
+export default Posts;
