@@ -9,13 +9,23 @@ import {
     Bars3Icon,
     HomeIcon,
   } from "@heroicons/react/24/outline";
+  import { useSession, signIn, signOut } from 'next-auth/react'
+  import { useRouter } from 'next/router'
+  import { useRecoilState } from 'recoil'
+  import { modalState } from '../atoms/modalAtom'
 
 function Header() {
+  const {data: session, status} = useSession();
+  const [open, setOpen] = useRecoilState(modalState)
+  const router = useRouter()
+
+  
+
   return (
     <div className='shadow-sm border-b bg-white sticky top-0 z-50'>
         <div className='flex justify-between max-w-6xl mx-5 lg:mx-auto'>
            {/* Left */}
-        <div className='relative hidden lg:inline-grid w-24 cursor-pointer '>
+        <div onClick={() => router.push('/')} className='relative hidden lg:inline-grid w-24 cursor-pointer '>
             <Image 
             layout='fill'
             objectFit='contain'
@@ -23,7 +33,7 @@ function Header() {
             alt='logo' />
         </div> 
 
-        <div className='relative w-10 lg:hidden flex-shrink-0 cursor-pointer'>
+        <div onClick={() => router.push('/')} className='relative w-10 lg:hidden flex-shrink-0 cursor-pointer'>
             <Image
              layout='fill'
              objectFit='contain'
@@ -41,19 +51,25 @@ function Header() {
         </div>
         
         <div className='flex items-center justify-end space-x-4'>
-          <HomeIcon className='navBtn' />
+          <HomeIcon onClick={() => router.push('/')} className='navBtn' />
           <Bars3Icon className='h-6 md:hidden cursor-pointer' />
 
-            <div className='relative navBtn'>
+            {session ? (
+              <>
+              <div className='relative navBtn'>
               <PaperAirplaneIcon className='navBtn -rotate-45' />
               <div className='absolute -top-1 -right-2 text-xs w-5 h-5 bg-red-500 rounded-full flex items-center justify-center animate-pulse text-white'>3</div>
             </div>
           
-          <PlusCircleIcon className='navBtn' />
+          <PlusCircleIcon onClick={() => setOpen(true)} className='navBtn' />
           <UserGroupIcon className='navBtn' />
           <HeartIcon className='navBtn'/>
 
-          <img src='https://i.ibb.co/kKBBCMf/twitter-dp.jpg' className='h-10 rounded-full cursor-pointer' alt="" />
+          <img onClick={signOut} src={session.user.image} className='h-10 w-10 rounded-full cursor-pointer' alt="Profile Pic" />
+          </>
+            ) : (
+              <button onClick={signIn}>Sign In</button>
+            )}
         </div>
       </div>
     </div>
