@@ -10,7 +10,7 @@ const Home: NextPage = () => {
     <div className="bg-gray-50 h-screen overflow-y-scroll scrollbar-hide">
       <Head>
         <title>Instagram | Paul Serafim</title>
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="https://i.pinimg.com/originals/2c/26/20/2c262006d4020341cf101a9ba9d7b943.jpg" />
       </Head>
       
       <Header />
